@@ -12,7 +12,7 @@
 <style>
 :root{--red:#E21B3C;--blue:#1368CE;--yellow:#E8A200;--green:#26890C;--cardink:#2A1442;--r:22px}
 [data-theme=party]{--bg:#FFF1E2;--tx:#2A1442;--mute:#7A6590;--card:#fff;--btn:#FF4F8B;--btn-ink:#fff;--btn-edge:#C42A63;--accent:#FF4F8B;--gold:#FFC21A;--soft:#FBE3EF;--sh:0 14px 34px -14px rgba(90,30,120,.35)}
-[data-theme=classic]{--bg:#46178F;--tx:#fff;--mute:#CBB8EE;--card:#fff;--btn:#fff;--btn-ink:#46178F;--btn-edge:#2A0E5C;--accent:#fff;--gold:#fff;--soft:#EFE7FB;--sh:0 8px 0 rgba(0,0,0,.18)}
+[data-theme=classic]{--bg:#17113D;--tx:#fff;--mute:#A99FD6;--card:#262060;--cardink:#fff;--btn:#D4FF4F;--btn-ink:#17113D;--btn-edge:#D4FF4F;--accent:#D4FF4F;--gold:#D4FF4F;--soft:rgba(212,255,79,.16);--sh:none;--r:16px}
 *{box-sizing:border-box;margin:0}
 html,body{min-height:100%}
 body{font-family:Heebo,system-ui,sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden;-webkit-tap-highlight-color:transparent;transition:background .5s}
@@ -36,7 +36,6 @@ button{font:inherit;cursor:pointer;border:0;color:inherit}
 .top{position:fixed;inset:0 0 auto 0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:max(12px,env(safe-area-inset-top)) 16px 12px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.15rem;letter-spacing:-.02em}
 .badge{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;font-size:1.05rem;box-shadow:0 0 0 3px var(--gold)}
-[data-theme=classic] .badge{background:#fff;color:#46178F;box-shadow:none}
 .pills{display:flex;gap:8px}
 .pill{padding:8px 14px;border-radius:99px;background:var(--card);color:var(--cardink);font-weight:600;font-size:.85rem;box-shadow:var(--sh)}
 .screen{display:none;position:relative;z-index:1;min-height:100dvh;padding:84px 20px 28px;flex-direction:column;max-width:1200px;margin:auto;width:100%}
@@ -49,13 +48,43 @@ button{font:inherit;cursor:pointer;border:0;color:inherit}
 .card{background:var(--card);color:var(--cardink);border-radius:var(--r);padding:24px;box-shadow:var(--sh)}
 input{font:inherit;width:100%;padding:16px 18px;border-radius:16px;border:3px solid transparent;background:#fff;color:var(--cardink);font-weight:800;font-size:1.3rem;text-align:center;outline:0;box-shadow:var(--sh)}
 input:focus{border-color:var(--accent)}
-[data-theme=classic] input:focus{border-color:#26890C}
 .kicker{font-weight:800;color:var(--mute);letter-spacing:.02em}
 .center{align-items:center;justify-content:center;text-align:center}
 
 input[type=radio]{width:26px;height:26px;padding:0;box-shadow:none;accent-color:var(--accent);flex:none}
 .card input:not([type=radio]){border:2px solid #E7DDF2;box-shadow:none;font-size:1.05rem;text-align:start;padding:12px 14px}
 .erow{display:flex;gap:10px;align-items:center}
+select{font:inherit;font-weight:800;padding:12px 16px;border-radius:14px;border:2px solid transparent;background:var(--card);color:var(--cardink);box-shadow:var(--sh);max-width:100%;min-width:0}
+.card select{border:2px solid #E7DDF2;box-shadow:none}
+.gsel{display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.shapes{display:none}
+.shapes div{aspect-ratio:1;border-radius:22px;display:grid;place-items:center;color:#fff}
+.shapes div:nth-child(even){transform:translateY(22px)}
+.shapes svg{width:44%;fill:currentColor}
+.logo4{display:none}
+.logo4 i{border-radius:5px}
+.logo4 i:nth-child(1){background:var(--red)}.logo4 i:nth-child(2){background:var(--blue)}.logo4 i:nth-child(3){background:var(--yellow)}.logo4 i:nth-child(4){background:var(--green)}
+/* classic theme refinements */
+[data-theme=classic] body{background:radial-gradient(rgba(255,255,255,.07) 1.2px,transparent 1.7px) 0 0/28px 28px,var(--bg)}
+[data-theme=classic] .badge{display:none}
+[data-theme=classic] .logo4{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:32px;height:32px}
+[data-theme=classic] .brand{letter-spacing:-.01em}
+[data-theme=classic] .shapes{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:400px;margin:0 auto 22px;width:100%}
+[data-theme=classic] .btn{border-radius:14px;box-shadow:none}
+[data-theme=classic] .btn:active{transform:scale(.97);box-shadow:none}
+[data-theme=classic] .btn.alt{background:transparent;color:var(--tx);box-shadow:inset 0 0 0 2px #4A3FA6}
+[data-theme=classic] .pill{border-radius:10px;background:#2A2368}
+[data-theme=classic] .chip{border-radius:12px}
+[data-theme=classic] input:not([type=radio]),[data-theme=classic] select{background:var(--card);color:#fff;border-color:#3B3187;box-shadow:none}
+[data-theme=classic] input::placeholder{color:var(--mute)}
+[data-theme=classic] input:not([type=radio]):focus{border-color:var(--accent)}
+[data-theme=classic] .card input:not([type=radio]),[data-theme=classic] .card select{border-color:#3B3187}
+[data-theme=classic] #qr>*{background:#fff;padding:10px;border-radius:12px}
+[data-theme=classic] .tile{border-radius:16px;box-shadow:0 6px 0 rgba(0,0,0,.28)}
+[data-theme=classic] .qtext{border-inline-start:6px solid var(--accent)}
+[data-theme=classic] .hero h1{letter-spacing:-.05em}
+[data-theme=classic] .timer{border-radius:18px}
+[data-theme=classic] .row,[data-theme=classic] .bar{border-radius:14px}
 /* landing */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;flex:1}
 .hero h1{font-size:clamp(3rem,8.5vw,7rem);line-height:.95;letter-spacing:-.045em;font-weight:900;margin:14px 0 18px}
@@ -64,15 +93,14 @@ input[type=radio]{width:26px;height:26px;padding:0;box-shadow:none;accent-color:
 .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
 .ten{font-size:clamp(11rem,30vw,24rem);font-weight:900;line-height:.8;letter-spacing:-.08em;text-align:center;color:var(--accent);text-shadow:10px 10px 0 var(--gold);transform:rotate(-6deg);direction:ltr}
 [data-theme=classic] .ten{display:none}
-@media(max-width:760px){.hero{grid-template-columns:1fr}.ten{order:-1;font-size:9rem;margin-top:10px}}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.ten{order:-1;font-size:9rem;margin-top:10px}.shapes{order:-1;max-width:210px;margin-top:6px}}
 
 /* host lobby */
 .lobby{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:26px;flex:1;align-items:start}
 .pinbox{text-align:center}
 .pinbox .pin{font-size:clamp(4.5rem,11vw,7.5rem);font-weight:900;letter-spacing:.06em;line-height:1;direction:ltr;margin:6px 0 14px;color:var(--accent)}
-[data-theme=classic] .pinbox .pin{color:var(--cardink)}
 #qr{display:grid;place-items:center;margin:8px auto;min-height:150px}
-.link{font-size:.8rem;color:#7A6590;word-break:break-all;direction:ltr;margin-top:8px}
+.link{font-size:.8rem;color:var(--mute);word-break:break-all;direction:ltr;margin-top:8px}
 .plist{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .chip{background:var(--card);color:var(--cardink);padding:10px 18px;border-radius:99px;font-weight:800;font-size:1.1rem;box-shadow:var(--sh);animation:pop .4s cubic-bezier(.3,1.6,.5,1) both}
 @keyframes pop{from{transform:scale(.3);opacity:0}}
@@ -84,7 +112,6 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 .timer{display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:var(--card);color:var(--cardink);font-size:2.2rem;font-weight:900;box-shadow:var(--sh)}
 .tbar{height:10px;border-radius:9px;background:rgba(127,127,127,.25);overflow:hidden;margin-bottom:18px}
 .tbar i{display:block;height:100%;width:100%;background:var(--accent);transform-origin:right;transition:width .1s linear}
-[data-theme=classic] .tbar i{background:#fff}
 .qtext{font-size:clamp(1.7rem,4.2vw,3.2rem);font-weight:900;line-height:1.15;letter-spacing:-.03em;text-align:center;padding:30px 24px;margin-bottom:18px}
 .grid4{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1}
 .tile{display:flex;align-items:center;gap:16px;border-radius:20px;padding:18px 22px;color:#fff;font-weight:800;font-size:clamp(1.15rem,2.6vw,2rem);box-shadow:0 7px 0 rgba(0,0,0,.22);min-height:96px;text-align:start}
@@ -100,7 +127,6 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 .col .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff}
 .col .ic svg{width:24px;fill:currentColor}
 .col .ok{font-weight:900;color:var(--accent);height:22px}
-[data-theme=classic] .col .ok{color:#fff}
 .right{text-align:center;font-weight:800;font-size:1.3rem;margin-bottom:6px}
 
 /* board */
@@ -108,9 +134,8 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 .row{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);color:var(--cardink);border-radius:18px;padding:16px 22px;font-weight:900;font-size:1.4rem;box-shadow:var(--sh);overflow:hidden;animation:in .5s both}
 .row i{position:absolute;inset:0 auto 0 0;background:var(--soft);z-index:0;transition:width 1s cubic-bezier(.2,.9,.3,1);width:0;right:0;left:auto}
 .row span{position:relative;z-index:1}
-.row small{font-weight:600;color:#7A6590;font-size:.9rem;margin-inline-start:8px}
+.row small{font-weight:600;color:var(--mute);font-size:.9rem;margin-inline-start:8px}
 .row .rk{display:inline-block;width:34px;color:var(--accent)}
-[data-theme=classic] .row .rk{color:#46178F}
 
 /* podium */
 .podium{display:flex;direction:ltr;justify-content:center;align-items:flex-end;gap:14px;height:46vh;min-height:300px;margin:20px 0}
@@ -128,7 +153,6 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 .pgrid .tile:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
 .big{font-size:clamp(2.6rem,12vw,4.5rem);font-weight:900;letter-spacing:-.04em;line-height:1}
 .ring{width:84px;height:84px;margin:0 auto 22px;border-radius:50%;border:8px solid rgba(127,127,127,.25);border-top-color:var(--accent);animation:spin 1s linear infinite}
-[data-theme=classic] .ring{border-top-color:#fff}
 @keyframes spin{to{transform:rotate(360deg)}}
 .res-ok{background:var(--green);color:#fff}.res-no{background:var(--red);color:#fff}
 .full{position:fixed;inset:0;z-index:0}
@@ -141,7 +165,7 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 <body>
 
 <div class="deco" aria-hidden="true">
-  <div class="wm">10</div>
+  <div class="wm bAge">10</div>
   <div class="bl" style="--c:#FF4F8B;left:3%;--d:30s;--w:-4s"></div>
   <div class="bl" style="--c:#6C3DF0;left:9%;--d:38s;--w:-18s;width:44px;height:56px"></div>
   <div class="bl" style="--c:#FFC21A;left:90%;--d:34s;--w:-9s"></div>
@@ -153,8 +177,8 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 </div>
 
 <div class="top">
-  <div class="brand"><span class="badge">10</span>
-    <span><span class="only-party">מזל טוב למעין!</span><span class="only-classic">טריוויה של מעין</span></span></div>
+  <div class="brand"><span class="badge bAge">10</span><span class="logo4"><i></i><i></i><i></i><i></i></span>
+    <span><span class="only-party" id="bTxtP"></span><span class="only-classic" id="bTxtC"></span></span></div>
   <div class="pills">
     <button class="pill" id="bTheme" style="display:none"></button>
     <button class="pill" id="bMute">צליל: פעיל</button>
@@ -165,22 +189,30 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 <section class="screen" id="landing">
   <div class="hero">
     <div>
-      <div class="kicker"><span class="only-party">יום הולדת 10 · </span>טריוויה חיה</div>
-      <h1><span class="only-party">מזל טוב<br><em>למעין!</em></span><span class="only-classic">שחקו.<br>ענו.<br>נצחו.</span></h1>
+      <div class="kicker"><span class="only-party" id="kP"></span><span class="only-classic" id="kC"></span></div>
+      <h1><span class="only-party" id="h1P"></span><span class="only-classic">שחקו.<br>ענו.<br>נצחו.</span></h1>
       <p>חידון משפחתי חי: המסך הגדול שואל, הטלפון עונה.</p>
-      <div class="cta">
+      <div class="gsel"><span class="kicker">משחק:</span><select id="gSel"></select></div>
+      <div class="cta" style="margin-top:18px">
         <button class="btn" id="goHost">אירוח משחק</button>
         <button class="btn alt" id="goJoin">הצטרפות למשחק</button>
-        <button class="btn alt" id="goEdit" style="font-size:1rem;padding:12px 22px">עריכת שאלות</button>
+        <button class="btn alt" id="goEdit" style="font-size:1rem;padding:12px 22px">עריכת משחקים</button>
       </div>
     </div>
-    <div class="ten" aria-hidden="true">10</div>
+    <div class="ten bAge" aria-hidden="true">10</div><div class="shapes" id="shapes" aria-hidden="true"></div>
   </div>
 </section>
 
 <!-- EDITOR -->
 <section class="screen" id="editor">
-  <h2>עריכת שאלות</h2>
+  <h2>עריכת משחקים</h2>
+  <div class="card" style="margin:14px 0;display:flex;flex-direction:column;gap:10px">
+    <select id="eSel" style="width:100%"></select>
+    <input id="gTitle" placeholder="שם המשחק (למשל: חידון הכיתה)">
+    <div class="erow"><input id="gName" placeholder="שם החוגג/ת לעיצוב יום הולדת (ריק = בלי)"><input id="gAge" type="number" min="1" max="120" placeholder="גיל" style="width:110px"></div>
+    <div class="erow" style="flex-wrap:wrap"><button class="btn" id="gNew" style="font-size:1rem;padding:12px 22px">משחק חדש</button><button class="btn alt" id="gDup" style="font-size:1rem;padding:12px 22px">שכפול</button><button class="btn alt" id="gDel" style="font-size:1rem;padding:12px 22px">מחיקה</button></div>
+  </div>
+  <h2 style="font-size:1.5rem">שאלות</h2>
   <div class="card" style="margin:14px 0;display:flex;flex-direction:column;gap:10px">
     <input id="eq" placeholder="השאלה">
     <div class="erow"><input type="radio" name="ec" value="0"><input class="ea" placeholder="תשובה 1 (משולש אדום)"></div>
@@ -191,7 +223,7 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
     <div class="erow"><button class="btn" id="eSave" style="font-size:1.05rem;padding:12px 26px">הוספת שאלה</button><button class="btn alt" id="eCancel" style="display:none;font-size:1rem;padding:12px 22px">ביטול עריכה</button></div>
   </div>
   <div class="rows" id="elist"></div>
-  <div class="cta" style="margin-top:0"><button class="btn" id="eBack">סיום וחזרה</button><button class="btn alt" id="eReset" style="font-size:1rem;padding:12px 22px">איפוס לשאלות המקור</button></div>
+  <div class="cta" style="margin-top:0"><button class="btn" id="eBack">סיום וחזרה</button><button class="btn alt" id="eReset" style="font-size:1rem;padding:12px 22px">איפוס חידון מעין למקור</button></div>
 </section>
 
 <!-- HOST LOBBY -->
@@ -239,7 +271,7 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 
 <!-- HOST END -->
 <section class="screen center" id="h-end">
-  <h2 style="font-size:clamp(2.2rem,6vw,4.5rem)"><span class="only-party">הזוכים של מעין! </span><span class="only-classic">הפודיום</span></h2>
+  <h2 style="font-size:clamp(2.2rem,6vw,4.5rem)"><span class="only-party" id="endP"></span><span class="only-classic">הפודיום</span></h2>
   <div class="podium" id="podium"></div>
   <button class="btn" onclick="location.href=location.pathname">משחק חדש</button>
 </section>
@@ -286,7 +318,7 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
 
 <script>
 /* ============================================================
-   ✏️  QUESTIONS — edit here!
+   ✏️  DEFAULT_QUESTIONS — Maayan's built-in game (other games are created in the in-app editor)
    q:       the question text
    a:       exactly 4 answers  (order = red triangle, blue diamond, yellow circle, green square)
    correct: index of the right answer (0 = first, 1 = second, 2 = third, 3 = fourth)
@@ -310,12 +342,16 @@ const DEFAULT_QUESTIONS = [
   { q: "כמה בני דודים יש לה?", a: ["12", "14", "16", "18"], correct: 2, time: 20 },
   { q: "איך קראו למטפלת הראשונה שלה?", a: ["עדינה", "חגית", "דינה", "מרים"], correct: 2, time: 20 }
 ];
-/* Questions added/edited through the in-app editor (landing page) are stored in this browser
-   and override the list above. Use "איפוס" in the editor to go back to this list. */
-let QUESTIONS = null;
-try{ QUESTIONS = JSON.parse(localStorage.getItem('mq10') || 'null'); }catch(e){}
-if(!Array.isArray(QUESTIONS) || !QUESTIONS.length) QUESTIONS = DEFAULT_QUESTIONS.map(x => ({...x}));
-const saveQ = () => { try{ localStorage.setItem('mq10', JSON.stringify(QUESTIONS)); }catch(e){} };
+const mk = q => q.map(x => ({...x}));
+let store = null;
+try{ store = JSON.parse(localStorage.getItem('mq10_v2') || 'null'); }catch(e){}
+if(!store || !Array.isArray(store.games) || !store.games.length){
+  let qs = null; try{ qs = JSON.parse(localStorage.getItem('mq10') || 'null'); }catch(e){}
+  store = {sel: 'maayan', games: [{id: 'maayan', title: 'החידון של מעין', name: 'מעין', age: '10', questions: Array.isArray(qs) && qs.length ? qs : mk(DEFAULT_QUESTIONS)}]};
+}
+const saveS = () => { try{ localStorage.setItem('mq10_v2', JSON.stringify(store)); }catch(e){} };
+const cur = () => store.games.find(g => g.id === store.sel) || store.games[0];
+let QUESTIONS = [], hostBrand = {};
 /* ============================================================ */
 
 const PFX = 'maayan10-';
@@ -381,29 +417,61 @@ $('#goHost').onclick = () => { ctx(); hostStart(); };
 $('#goJoin').onclick = () => { ctx(); show('join'); };
 $('#inPin').oninput = e => e.target.value = e.target.value.replace(/\D/g, '');
 
+/* ---------- brand + games ---------- */
+function applyBrand(b){
+  const n = (b.name || '').trim(), A = b.age || '★', t = (b.title || '').trim() || 'טריוויה חיה';
+  $$('.bAge').forEach(e => e.textContent = A);
+  $('#bTxtP').textContent = n ? `מזל טוב ל${n}!` : t; $('#bTxtC').textContent = t;
+  $('#h1P').innerHTML = n ? `מזל טוב<br><em>ל${esc(n)}!</em>` : 'שחקו.<br><em>ענו.</em><br>נצחו.';
+  $('#kP').textContent = n && b.age ? `יום הולדת ${b.age} · ${t}` : t; $('#kC').textContent = t;
+  $('#endP').textContent = n ? `הזוכים של ${n}!` : 'הפודיום';
+  document.title = n ? `מזל טוב ל${n}! · ${t}` : t;
+}
+const brandOf = g => ({name: g.name, age: g.age, title: g.title});
+const fillSel = el => el.innerHTML = store.games.map(g => `<option value="${g.id}" ${g.id === store.sel ? 'selected' : ''}>${esc(g.title || 'ללא שם')}</option>`).join('');
+function refreshLanding(){ fillSel($('#gSel')); applyBrand(brandOf(cur())); }
+$('#gSel').onchange = e => { store.sel = e.target.value; saveS(); applyBrand(brandOf(cur())); };
+$('#shapes').innerHTML = SH.map((x, i) => `<div class="t${i}">${x}</div>`).join('');
+
 /* ---------- editor ---------- */
 let eIdx = -1;
 function renderEditor(){
-  $('#elist').innerHTML = QUESTIONS.map((q, i) => `<div class="row" style="font-size:1rem"><span>${i + 1}. ${esc(q.q)}</span><span style="display:flex;gap:6px"><button class="pill" data-e="${i}">עריכה</button><button class="pill" data-d="${i}">מחיקה</button></span></div>`).join('');
+  fillSel($('#eSel')); const g = cur(), Qs = g.questions;
+  $('#gTitle').value = g.title || ''; $('#gName').value = g.name || ''; $('#gAge').value = g.age || '';
+  $('#eReset').style.display = g.id === 'maayan' ? '' : 'none';
+  $('#elist').innerHTML = Qs.length ? Qs.map((q, i) => `<div class="row" style="font-size:1rem"><span>${i + 1}. ${esc(q.q)}</span><span style="display:flex;gap:6px"><button class="pill" data-e="${i}">עריכה</button><button class="pill" data-d="${i}">מחיקה</button></span></div>`).join('') : '<div class="kicker">אין עדיין שאלות במשחק הזה</div>';
   $$('#elist [data-e]').forEach(b => b.onclick = () => {
-    eIdx = +b.dataset.e; const q = QUESTIONS[eIdx];
+    eIdx = +b.dataset.e; const q = Qs[eIdx];
     $('#eq').value = q.q; $$('.ea').forEach((x, i) => x.value = q.a[i]); $$('[name=ec]')[q.correct].checked = true; $('#et').value = q.time || 20;
     $('#eSave').textContent = 'שמירת שינויים'; $('#eCancel').style.display = ''; scrollTo(0, 0);
   });
-  $$('#elist [data-d]').forEach(b => b.onclick = () => { if(QUESTIONS.length < 2) return toast('חייבת להישאר שאלה אחת'); QUESTIONS.splice(+b.dataset.d, 1); saveQ(); clearForm(); renderEditor(); });
+  $$('#elist [data-d]').forEach(b => b.onclick = () => { Qs.splice(+b.dataset.d, 1); saveS(); clearForm(); renderEditor(); });
 }
 function clearForm(){ eIdx = -1; $('#eq').value = ''; $$('.ea').forEach(x => x.value = ''); $$('[name=ec]').forEach(r => r.checked = false); $('#et').value = 20; $('#eSave').textContent = 'הוספת שאלה'; $('#eCancel').style.display = 'none'; }
 $('#goEdit').onclick = () => { clearForm(); renderEditor(); show('editor'); };
 $('#eCancel').onclick = clearForm;
-$('#eBack').onclick = () => show('landing');
-$('#eReset').onclick = () => { if(!confirm('לחזור לשאלות המקור?')) return; try{ localStorage.removeItem('mq10'); }catch(e){} QUESTIONS = DEFAULT_QUESTIONS.map(x => ({...x})); clearForm(); renderEditor(); };
+$('#eBack').onclick = () => { refreshLanding(); show('landing'); };
+$('#eSel').onchange = e => { store.sel = e.target.value; saveS(); clearForm(); renderEditor(); applyBrand(brandOf(cur())); };
+['gTitle', 'gName', 'gAge'].forEach(id => $('#' + id).oninput = () => { const g = cur(); g.title = $('#gTitle').value; g.name = $('#gName').value.trim(); g.age = $('#gAge').value; saveS(); fillSel($('#eSel')); applyBrand(brandOf(g)); });
+const addGame = g => { store.games.push(g); store.sel = g.id; saveS(); clearForm(); renderEditor(); applyBrand(brandOf(g)); };
+$('#gNew').onclick = () => addGame({id: 'g' + Date.now(), title: 'משחק חדש', name: '', age: '', questions: []});
+$('#gDup').onclick = () => { const c = cur(); addGame({...c, id: 'g' + Date.now(), title: (c.title || '') + ' (עותק)', questions: mk(c.questions)}); };
+$('#gDel').onclick = () => {
+  if(store.games.length < 2) return toast('חייב להישאר משחק אחד');
+  if(!confirm('למחוק את המשחק?')) return;
+  store.games = store.games.filter(g => g.id !== store.sel); store.sel = store.games[0].id; saveS(); clearForm(); renderEditor(); applyBrand(brandOf(cur()));
+};
+$('#eReset').onclick = () => {
+  if(!confirm('לשחזר את חידון מעין למקור?')) return;
+  Object.assign(cur(), {title: 'החידון של מעין', name: 'מעין', age: '10', questions: mk(DEFAULT_QUESTIONS)}); saveS(); clearForm(); renderEditor(); applyBrand(brandOf(cur()));
+};
 $('#eSave').onclick = () => {
   const q = $('#eq').value.trim(), a = $$('.ea').map(x => x.value.trim()), c = $$('[name=ec]').findIndex(r => r.checked);
   if(!q || a.some(x => !x)) return toast('צריך למלא שאלה וארבע תשובות');
   if(c < 0) return toast('סמנו את התשובה הנכונה');
-  const o = {q, a, correct: c, time: Math.min(90, Math.max(5, +$('#et').value || 20))};
-  if(eIdx >= 0) QUESTIONS[eIdx] = o; else QUESTIONS.push(o);
-  saveQ(); clearForm(); renderEditor(); toast('נשמר');
+  const o = {q, a, correct: c, time: Math.min(90, Math.max(5, +$('#et').value || 20))}, Qs = cur().questions;
+  if(eIdx >= 0) Qs[eIdx] = o; else Qs.push(o);
+  saveS(); clearForm(); renderEditor(); toast('נשמר');
 };
 
 /* ============================ HOST ============================ */
@@ -412,13 +480,15 @@ const broadcast = m => Object.values(players).forEach(p => { try{ p.conn.send(m)
 const active = () => Object.values(players).filter(p => !p.off);
 
 function hostStart(){
+  const g = cur(); QUESTIONS = g.questions; hostBrand = brandOf(g);
+  if(!QUESTIONS.length) return toast('אין שאלות במשחק הזה. הוסיפו ב״עריכת משחקים״');
   role = 'host'; $('#bTheme').style.display = '';
   pin = String(1000 + Math.floor(Math.random() * 9000));
   peer = new Peer(PFX + pin, CFG);
   peer.on('open', () => {
     show('h-lobby'); $('#pin').textContent = pin;
-    const url = location.origin + location.pathname + '?pin=' + pin;
-    $('#joinUrl').textContent = url.replace(/^https?:\/\//, '');
+    const url = location.origin + location.pathname + '?pin=' + pin + '&n=' + encodeURIComponent(hostBrand.name || '') + '&a=' + encodeURIComponent(hostBrand.age || '') + '&t=' + encodeURIComponent(hostBrand.title || '');
+    $('#joinUrl').textContent = (location.origin + location.pathname + '?pin=' + pin).replace(/^https?:\/\//, '');
     $('#qr').innerHTML = '';
     try{ new QRCode($('#qr'), {text: url, width: 160, height: 160, colorDark: '#2A1442', colorLight: '#ffffff'}); }catch(e){}
   });
@@ -443,7 +513,7 @@ function hmsg(c, d){
     let name = String(d.name || '').trim().slice(0, 14) || 'שחקן', n = name, k = 2;
     while(Object.values(players).some(p => p.name === n)) n = name + ' ' + k++;
     players[id] = {name: n, score: 0, conn: c, last: 0};
-    c.send({t: 'joined', name: n, theme: document.documentElement.dataset.theme});
+    c.send({t: 'joined', name: n, theme: document.documentElement.dataset.theme, brand: hostBrand});
     if(state !== 'lobby') c.send({t: 'wait'});
     renderLobby(); sfx.join();
   }
@@ -535,7 +605,7 @@ $('#bJoin').onclick = () => {
 };
 function pmsg(d){
   if(d.t === 'theme') setTheme(d.v);
-  if(d.t === 'joined'){ setTheme(d.theme); myName = d.name; $('#pName').textContent = d.name; show('p-wait'); sfx.join(); }
+  if(d.t === 'joined'){ setTheme(d.theme); if(d.brand) applyBrand(d.brand); myName = d.name; $('#pName').textContent = d.name; show('p-wait'); sfx.join(); }
   if(d.t === 'wait'){ $('#pMsg').textContent = 'משחק כבר רץ, תצטרפו בשאלה הבאה'; }
   if(d.t === 'q'){
     answered = false; pTime = d.time; pStart = Date.now(); $('#pq').textContent = `שאלה ${d.idx + 1} מתוך ${d.total}`;
@@ -559,8 +629,11 @@ function pmsg(d){
 }
 
 /* ---------- boot ---------- */
-const urlPin = new URLSearchParams(location.search).get('pin');
-if(urlPin){ $('#inPin').value = urlPin.replace(/\D/g, '').slice(0, 4); show('join'); } else show('landing');
+const UP = new URLSearchParams(location.search), urlPin = UP.get('pin');
+if(urlPin){
+  applyBrand({name: UP.get('n') || '', age: UP.get('a') || '', title: UP.get('t') || ''});
+  $('#inPin').value = urlPin.replace(/\D/g, '').slice(0, 4); show('join');
+} else { refreshLanding(); show('landing'); }
 </script>
 </body>
 </html>
