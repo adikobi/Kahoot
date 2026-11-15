@@ -283,6 +283,9 @@ const QUESTIONS = [
 /* ============================================================ */
 
 const PFX = 'maayan10-';
+const CFG = {debug: 1, config: {iceCandidatePoolSize: 4, iceServers: [
+  {urls: 'stun:stun.l.google.com:19302'}, {urls: 'stun:stun1.l.google.com:19302'}, {urls: 'stun:global.stun.twilio.com:3478'},
+  {urls: ['turn:openrelay.metered.ca:80', 'turn:openrelay.metered.ca:443', 'turn:openrelay.metered.ca:443?transport=tcp'], username: 'openrelayproject', credential: 'openrelayproject'}]}};
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const SH = [
   '<svg viewBox="0 0 24 24"><path d="M12 3 22 20H2z"/></svg>',
@@ -350,7 +353,7 @@ const active = () => Object.values(players).filter(p => !p.off);
 function hostStart(){
   role = 'host'; $('#bTheme').style.display = '';
   pin = String(1000 + Math.floor(Math.random() * 9000));
-  peer = new Peer(PFX + pin);
+  peer = new Peer(PFX + pin, CFG);
   peer.on('open', () => {
     show('h-lobby'); $('#pin').textContent = pin;
     const url = location.origin + location.pathname + '?pin=' + pin;
@@ -358,7 +361,11 @@ function hostStart(){
     $('#qr').innerHTML = '';
     try{ new QRCode($('#qr'), {text: url, width: 160, height: 160, colorDark: '#2A1442', colorLight: '#ffffff'}); }catch(e){}
   });
-  peer.on('error', e => { if(e.type === 'unavailable-id'){ peer.destroy(); hostStart(); } else toast('שגיאת חיבור: ' + e.type); });
+  peer.on('disconnected', () => { try{ peer.reconnect(); }catch(e){} });
+  peer.on('error', e => {
+    if(e.type === 'unavailable-id'){ peer.destroy(); hostStart(); }
+    else if(e.type === 'network' || e.type === 'server-error' || e.type === 'socket-error'){ toast('בעיית רשת, מנסה להתחבר מחדש'); setTimeout(() => { try{ peer.reconnect(); }catch(x){} }, 2000); }
+  });
   peer.on('connection', c => {
     c.on('data', d => hmsg(c, d));
     c.on('close', () => { const p = players[c.peer]; if(!p) return; if(state === 'lobby'){ delete players[c.peer]; renderLobby(); } else p.off = true; });
@@ -447,16 +454,23 @@ $('#bJoin').onclick = () => {
   const p = $('#inPin').value.trim(), n = $('#inName').value.trim();
   if(p.length !== 4) return toast('הקוד הוא 4 ספרות'); if(!n) return toast('איך קוראים לך?');
   ctx(); role = 'player'; $('#bJoin').disabled = true; $('#bJoin').textContent = 'מתחברים...';
-  const fail = m => { toast(m); $('#bJoin').disabled = false; $('#bJoin').textContent = 'יאללה, נכנסים'; try{ peer.destroy(); }catch(e){} };
-  peer = new Peer();
-  const to = setTimeout(() => fail('לא מצאנו את החדר, בדקו את הקוד'), 9000);
-  peer.on('error', e => { clearTimeout(to); fail(e.type === 'peer-unavailable' ? 'אין חדר עם הקוד הזה' : 'שגיאת חיבור'); });
-  peer.on('open', () => {
-    conn = peer.connect(PFX + p, {reliable: true});
-    conn.on('open', () => { clearTimeout(to); conn.send({t: 'join', name: n}); });
-    conn.on('data', pmsg);
-    conn.on('close', () => { toast('החיבור לחדר נסגר'); setTimeout(() => location.href = location.pathname, 1800); });
-  });
+  const fail = m => { done = true; toast(m); $('#bJoin').disabled = false; $('#bJoin').textContent = 'יאללה, נכנסים'; try{ peer.destroy(); }catch(e){} };
+  let tries = 0, done = false;
+  const go = () => {
+    try{ peer && peer.destroy(); }catch(e){}
+    peer = new Peer(undefined, CFG);
+    const to = setTimeout(() => { if(!done) retry('לא הצלחנו להתחבר לחדר'); }, 15000);
+    const retry = m => { clearTimeout(to); if(done) return; if(++tries < 4){ toast('מנסים שוב...'); setTimeout(go, 1200); } else fail(m); };
+    peer.on('error', e => retry(e.type === 'peer-unavailable' ? 'אין חדר עם הקוד הזה' : 'שגיאת חיבור'));
+    peer.on('open', () => {
+      conn = peer.connect(PFX + p, {reliable: true, serialization: 'json'});
+      conn.on('open', () => { conn.send({t: 'join', name: n}); });
+      conn.on('error', () => retry('שגיאת חיבור'));
+      conn.on('data', d => { if(d.t === 'joined'){ done = true; clearTimeout(to); } pmsg(d); });
+      conn.on('close', () => { if(!done) return; toast('החיבור לחדר נסגר'); setTimeout(() => location.href = location.pathname, 1800); });
+    });
+  };
+  go();
 };
 function pmsg(d){
   if(d.t === 'theme') setTheme(d.v);
