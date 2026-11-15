@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="party">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>מזל טוב למעין! · טריוויה חיה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--red:#E21B3C;--blue:#1368CE;--yellow:#E8A200;--green:#26890C;--cardink:#2A1442;--r:22px}
+[data-theme=party]{--bg:#FFF1E2;--tx:#2A1442;--mute:#7A6590;--card:#fff;--btn:#FF4F8B;--btn-ink:#fff;--btn-edge:#C42A63;--accent:#FF4F8B;--gold:#FFC21A;--soft:#FBE3EF;--sh:0 14px 34px -14px rgba(90,30,120,.35)}
+[data-theme=classic]{--bg:#46178F;--tx:#fff;--mute:#CBB8EE;--card:#fff;--btn:#fff;--btn-ink:#46178F;--btn-edge:#2A0E5C;--accent:#fff;--gold:#fff;--soft:#EFE7FB;--sh:0 8px 0 rgba(0,0,0,.18)}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{font-family:Heebo,system-ui,sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden;-webkit-tap-highlight-color:transparent;transition:background .5s}
+[data-theme=party] body{background:radial-gradient(900px 500px at 85% -10%,#FFD6E8 0,transparent 60%),radial-gradient(700px 500px at 0 110%,#E6DAFF 0,transparent 60%),var(--bg)}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.only-party,.only-classic{display:none}
+[data-theme=party] .only-party,[data-theme=classic] .only-classic{display:inline}
+
+/* decor (party only) */
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+[data-theme=classic] .deco{display:none}
+.wm{position:absolute;left:-4vw;bottom:-9vw;font-size:46vmin;font-weight:900;line-height:1;color:rgba(255,79,139,.09);letter-spacing:-.06em}
+.bl{position:absolute;bottom:-140px;width:56px;height:70px;border-radius:50% 50% 48% 48%/58% 58% 42% 42%;background:var(--c);opacity:.5;animation:rise var(--d) linear var(--w) infinite}
+.bl::after{content:"";position:absolute;left:50%;top:100%;width:1.5px;height:64px;background:rgba(42,20,66,.28)}
+.bl::before{content:"";position:absolute;left:18%;top:14%;width:14%;height:22%;border-radius:50%;background:rgba(255,255,255,.55)}
+@keyframes rise{from{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-60vh) rotate(5deg)}to{transform:translateY(-125vh) rotate(-4deg)}}
+.sp{position:absolute;color:var(--gold);font-size:18px;animation:tw 3.2s ease-in-out var(--w) infinite;opacity:0}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:.85;transform:scale(1) rotate(90deg)}}
+
+/* chrome */
+.top{position:fixed;inset:0 0 auto 0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:max(12px,env(safe-area-inset-top)) 16px 12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.15rem;letter-spacing:-.02em}
+.badge{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;font-size:1.05rem;box-shadow:0 0 0 3px var(--gold)}
+[data-theme=classic] .badge{background:#fff;color:#46178F;box-shadow:none}
+.pills{display:flex;gap:8px}
+.pill{padding:8px 14px;border-radius:99px;background:var(--card);color:var(--cardink);font-weight:600;font-size:.85rem;box-shadow:var(--sh)}
+.screen{display:none;position:relative;z-index:1;min-height:100dvh;padding:84px 20px 28px;flex-direction:column;max-width:1200px;margin:auto;width:100%}
+.screen.on{display:flex;animation:in .35s ease both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 34px;border-radius:99px;background:var(--btn);color:var(--btn-ink);font-weight:800;font-size:1.2rem;box-shadow:0 5px 0 var(--btn-edge);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btn-edge)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.alt{background:var(--card);color:var(--cardink);box-shadow:0 5px 0 rgba(42,20,66,.18)}
+.card{background:var(--card);color:var(--cardink);border-radius:var(--r);padding:24px;box-shadow:var(--sh)}
+input{font:inherit;width:100%;padding:16px 18px;border-radius:16px;border:3px solid transparent;background:#fff;color:var(--cardink);font-weight:800;font-size:1.3rem;text-align:center;outline:0;box-shadow:var(--sh)}
+input:focus{border-color:var(--accent)}
+[data-theme=classic] input:focus{border-color:#26890C}
+.kicker{font-weight:800;color:var(--mute);letter-spacing:.02em}
+.center{align-items:center;justify-content:center;text-align:center}
+
+/* landing */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;flex:1}
+.hero h1{font-size:clamp(3rem,8.5vw,7rem);line-height:.95;letter-spacing:-.045em;font-weight:900;margin:14px 0 18px}
+[data-theme=party] .hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:1.25rem;max-width:30ch;color:var(--mute);font-weight:600;line-height:1.5}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.ten{font-size:clamp(11rem,30vw,24rem);font-weight:900;line-height:.8;letter-spacing:-.08em;text-align:center;color:var(--accent);text-shadow:10px 10px 0 var(--gold);transform:rotate(-6deg);direction:ltr}
+[data-theme=classic] .ten{display:none}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.ten{order:-1;font-size:9rem;margin-top:10px}}
+
+/* host lobby */
+.lobby{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:26px;flex:1;align-items:start}
+.pinbox{text-align:center}
+.pinbox .pin{font-size:clamp(4.5rem,11vw,7.5rem);font-weight:900;letter-spacing:.06em;line-height:1;direction:ltr;margin:6px 0 14px;color:var(--accent)}
+[data-theme=classic] .pinbox .pin{color:var(--cardink)}
+#qr{display:grid;place-items:center;margin:8px auto;min-height:150px}
+.link{font-size:.8rem;color:#7A6590;word-break:break-all;direction:ltr;margin-top:8px}
+.plist{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chip{background:var(--card);color:var(--cardink);padding:10px 18px;border-radius:99px;font-weight:800;font-size:1.1rem;box-shadow:var(--sh);animation:pop .4s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
+@media(max-width:760px){.lobby{grid-template-columns:1fr}}
+
+/* question */
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.timer{display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:var(--card);color:var(--cardink);font-size:2.2rem;font-weight:900;box-shadow:var(--sh)}
+.tbar{height:10px;border-radius:9px;background:rgba(127,127,127,.25);overflow:hidden;margin-bottom:18px}
+.tbar i{display:block;height:100%;width:100%;background:var(--accent);transform-origin:right;transition:width .1s linear}
+[data-theme=classic] .tbar i{background:#fff}
+.qtext{font-size:clamp(1.7rem,4.2vw,3.2rem);font-weight:900;line-height:1.15;letter-spacing:-.03em;text-align:center;padding:30px 24px;margin-bottom:18px}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1}
+.tile{display:flex;align-items:center;gap:16px;border-radius:20px;padding:18px 22px;color:#fff;font-weight:800;font-size:clamp(1.15rem,2.6vw,2rem);box-shadow:0 7px 0 rgba(0,0,0,.22);min-height:96px;text-align:start}
+.tile svg{width:clamp(34px,5vw,54px);height:auto;flex:none;fill:currentColor}
+.t0{background:var(--red)}.t1{background:var(--blue)}.t2{background:var(--yellow);color:#2A1A00}.t3{background:var(--green)}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-weight:800;color:var(--mute)}
+
+/* chart */
+.chart{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:end;height:min(46vh,380px);margin:10px 0 22px}
+.col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:8px}
+.bar{width:100%;border-radius:16px 16px 6px 6px;min-height:10px;transition:height .8s cubic-bezier(.2,.9,.3,1);height:0;display:grid;place-items:start center;padding-top:10px;font-size:1.8rem;font-weight:900;color:#fff}
+.col.no{opacity:.35}
+.col .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.col .ic svg{width:24px;fill:currentColor}
+.col .ok{font-weight:900;color:var(--accent);height:22px}
+[data-theme=classic] .col .ok{color:#fff}
+.right{text-align:center;font-weight:800;font-size:1.3rem;margin-bottom:6px}
+
+/* board */
+.rows{display:flex;flex-direction:column;gap:12px;margin:14px 0 24px}
+.row{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);color:var(--cardink);border-radius:18px;padding:16px 22px;font-weight:900;font-size:1.4rem;box-shadow:var(--sh);overflow:hidden;animation:in .5s both}
+.row i{position:absolute;inset:0 auto 0 0;background:var(--soft);z-index:0;transition:width 1s cubic-bezier(.2,.9,.3,1);width:0;right:0;left:auto}
+.row span{position:relative;z-index:1}
+.row small{font-weight:600;color:#7A6590;font-size:.9rem;margin-inline-start:8px}
+.row .rk{display:inline-block;width:34px;color:var(--accent)}
+[data-theme=classic] .row .rk{color:#46178F}
+
+/* podium */
+.podium{display:flex;direction:ltr;justify-content:center;align-items:flex-end;gap:14px;height:46vh;min-height:300px;margin:20px 0}
+.pod{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:min(28vw,220px);height:100%}
+.pod b{font-size:clamp(1.1rem,3vw,1.9rem);font-weight:900;margin-bottom:8px;text-align:center}
+.pod .blk{width:100%;border-radius:18px 18px 0 0;background:var(--card);color:var(--cardink);display:grid;place-items:start center;padding-top:12px;font-weight:900;font-size:2.4rem;box-shadow:var(--sh);transform-origin:bottom;animation:grow 1s cubic-bezier(.2,.9,.3,1) both}
+.pod.p1 .blk{background:var(--gold);color:#2A1442}
+@keyframes grow{from{height:0!important;opacity:0}}
+
+/* player */
+.ptop{text-align:center;font-weight:800;color:var(--mute);margin-bottom:10px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;max-height:calc(100dvh - 190px)}
+.pgrid .tile{flex-direction:column;justify-content:center;text-align:center;gap:10px;font-size:1.15rem;padding:12px;border:0}
+.pgrid .tile svg{width:clamp(48px,16vw,84px)}
+.pgrid .tile:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.big{font-size:clamp(2.6rem,12vw,4.5rem);font-weight:900;letter-spacing:-.04em;line-height:1}
+.ring{width:84px;height:84px;margin:0 auto 22px;border-radius:50%;border:8px solid rgba(127,127,127,.25);border-top-color:var(--accent);animation:spin 1s linear infinite}
+[data-theme=classic] .ring{border-top-color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.res-ok{background:var(--green);color:#fff}.res-no{background:var(--red);color:#fff}
+.full{position:fixed;inset:0;z-index:0}
+#cf{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2A1442;color:#fff;padding:12px 22px;border-radius:99px;font-weight:800;z-index:60;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}.bl,.sp{display:none}}
+</style>
+</head>
+<body>
+
+<div class="deco" aria-hidden="true">
+  <div class="wm">10</div>
+  <div class="bl" style="--c:#FF4F8B;left:3%;--d:30s;--w:-4s"></div>
+  <div class="bl" style="--c:#6C3DF0;left:9%;--d:38s;--w:-18s;width:44px;height:56px"></div>
+  <div class="bl" style="--c:#FFC21A;left:90%;--d:34s;--w:-9s"></div>
+  <div class="bl" style="--c:#27B6A8;left:95%;--d:42s;--w:-25s;width:46px;height:58px"></div>
+  <div class="bl" style="--c:#FF4F8B;left:84%;--d:46s;--w:-33s;width:40px;height:52px"></div>
+  <span class="sp" style="left:12%;top:22%;--w:0s">✦</span><span class="sp" style="left:80%;top:30%;--w:1.1s">✦</span>
+  <span class="sp" style="left:6%;top:64%;--w:2s">✦</span><span class="sp" style="left:92%;top:68%;--w:.6s">✦</span>
+  <span class="sp" style="left:50%;top:10%;--w:1.7s">✦</span>
+</div>
+
+<div class="top">
+  <div class="brand"><span class="badge">10</span>
+    <span><span class="only-party">מזל טוב למעין!</span><span class="only-classic">טריוויה של מעין</span></span></div>
+  <div class="pills">
+    <button class="pill" id="bTheme" style="display:none"></button>
+    <button class="pill" id="bMute">צליל: פעיל</button>
+  </div>
+</div>
+
+<!-- LANDING -->
+<section class="screen" id="landing">
+  <div class="hero">
+    <div>
+      <div class="kicker"><span class="only-party">יום הולדת 10 · </span>טריוויה חיה</div>
+      <h1><span class="only-party">מזל טוב<br><em>למעין!</em></span><span class="only-classic">שחקו.<br>ענו.<br>נצחו.</span></h1>
+      <p>חידון משפחתי חי: המסך הגדול שואל, הטלפון עונה.</p>
+      <div class="cta">
+        <button class="btn" id="goHost">אירוח משחק</button>
+        <button class="btn alt" id="goJoin">הצטרפות למשחק</button>
+      </div>
+    </div>
+    <div class="ten" aria-hidden="true">10</div>
+  </div>
+</section>
+
+<!-- HOST LOBBY -->
+<section class="screen" id="h-lobby">
+  <div class="lobby">
+    <div class="card pinbox">
+      <div class="kicker">קוד החדר</div>
+      <div class="pin" id="pin">····</div>
+      <div id="qr"></div>
+      <div class="kicker">סרקו או היכנסו לכתובת</div>
+      <div class="link" id="joinUrl"></div>
+    </div>
+    <div>
+      <h2><span id="pc">0</span> שחקנים בחדר</h2>
+      <div class="plist" id="plist"></div>
+      <div style="margin-top:30px"><button class="btn" id="bStart" disabled>התחילו את המשחק</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOST QUESTION -->
+<section class="screen" id="h-q">
+  <div class="qhead"><div class="kicker" id="qn"></div><div class="timer" id="tnum">20</div></div>
+  <div class="tbar"><i id="tfill"></i></div>
+  <div class="card qtext" id="qtext"></div>
+  <div class="grid4" id="hans"></div>
+  <div class="foot"><span id="ansCount"></span><button class="btn alt" id="bSkip" style="padding:10px 22px;font-size:1rem">סיום מוקדם</button></div>
+</section>
+
+<!-- HOST REVEAL -->
+<section class="screen" id="h-rev">
+  <div class="kicker" id="rqn"></div>
+  <div class="card qtext" id="rq" style="margin:10px 0 0;padding:20px;font-size:clamp(1.3rem,3vw,2.2rem)"></div>
+  <div class="chart" id="chart"></div>
+  <div class="right" id="rightAns"></div>
+  <div style="text-align:center"><button class="btn" id="bBoard">לוח התוצאות</button></div>
+</section>
+
+<!-- HOST BOARD -->
+<section class="screen" id="h-board">
+  <h2>לוח התוצאות</h2>
+  <div class="rows" id="rows"></div>
+  <div><button class="btn" id="bNext">השאלה הבאה</button></div>
+</section>
+
+<!-- HOST END -->
+<section class="screen center" id="h-end">
+  <h2 style="font-size:clamp(2.2rem,6vw,4.5rem)"><span class="only-party">הזוכים של מעין! </span><span class="only-classic">הפודיום</span></h2>
+  <div class="podium" id="podium"></div>
+  <button class="btn" onclick="location.href=location.pathname">משחק חדש</button>
+</section>
+
+<!-- JOIN -->
+<section class="screen center" id="join">
+  <div style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px">
+    <h2 style="font-size:2.4rem">הצטרפות למשחק</h2>
+    <input id="inPin" inputmode="numeric" maxlength="4" placeholder="קוד חדר" autocomplete="off">
+    <input id="inName" maxlength="14" placeholder="הכינוי שלך" autocomplete="off">
+    <button class="btn" id="bJoin">יאללה, נכנסים</button>
+    <button class="btn alt" onclick="location.href=location.pathname" style="font-size:1rem;padding:12px">חזרה</button>
+  </div>
+</section>
+
+<!-- PLAYER -->
+<section class="screen center" id="p-wait">
+  <div class="ring"></div>
+  <div class="big" id="pName"></div>
+  <p class="kicker" style="margin-top:14px;font-size:1.2rem" id="pMsg">אתם בפנים! מחכים שהמשחק יתחיל</p>
+</section>
+<section class="screen" id="p-ans" style="padding-top:76px">
+  <div class="ptop" id="pq"></div>
+  <div class="tbar"><i id="ptf"></i></div>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+<section class="screen center" id="p-lock">
+  <div class="ring"></div><div class="big">נשלח!</div>
+  <p class="kicker" style="margin-top:14px;font-size:1.2rem">מחכים לשאר השחקנים</p>
+</section>
+<section class="screen center" id="p-res">
+  <div class="card center" id="pr" style="width:100%;max-width:420px;padding:44px 24px;display:flex;flex-direction:column;gap:12px">
+    <div class="big" id="prT"></div><div style="font-size:1.6rem;font-weight:800" id="prP"></div>
+    <div style="font-weight:600;opacity:.9" id="prS"></div></div>
+</section>
+<section class="screen center" id="p-end">
+  <div class="kicker" style="font-size:1.2rem">המשחק נגמר</div>
+  <div class="big" id="peR" style="margin:10px 0"></div>
+  <div style="font-size:1.6rem;font-weight:800" id="peS"></div>
+</section>
+
+<canvas id="cf"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   ✏️  QUESTIONS — edit here!
+   q:       the question text
+   a:       exactly 4 answers  (order = red triangle, blue diamond, yellow circle, green square)
+   correct: index of the right answer (0 = first, 1 = second, 2 = third, 3 = fourth)
+   time:    seconds to answer (optional, default 20)
+   Add or remove objects freely. Tip: add personal ones, e.g. the name of Maayan's pet!
+   ============================================================ */
+const QUESTIONS = [
+  { q: "מהי החיה הגבוהה ביותר בעולם?",           a: ["פיל", "ג׳ירפה", "גמל", "סוס"],                 correct: 1, time: 15 },
+  { q: "מה מדליקים על עוגת יום הולדת?",          a: ["נרות", "פנסים", "זיקוקים", "גפרורים"],         correct: 0, time: 15 },
+  { q: "באיזו עיר נמצא מגדל אייפל?",              a: ["רומא", "לונדון", "מדריד", "פריז"],              correct: 3, time: 20 },
+  { q: "כמה זה 7 × 8 ?",                          a: ["54", "56", "58", "64"],                         correct: 1, time: 20 },
+  { q: "איזה כוכב לכת נקרא ״הכוכב האדום״?",       a: ["נוגה", "צדק", "שבתאי", "מאדים"],                correct: 3, time: 20 }
+];
+/* ============================================================ */
+
+const PFX = 'maayan10-';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const SH = [
+  '<svg viewBox="0 0 24 24"><path d="M12 3 22 20H2z"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M12 1 23 12 12 23 1 12z"/></svg>',
+  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+  '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'];
+const COL = ['var(--red)', 'var(--blue)', 'var(--yellow)', 'var(--green)'];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function show(id){ $$('.screen').forEach(e => e.classList.toggle('on', e.id === id)); scrollTo(0, 0); }
+function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2600); }
+
+/* ---------- audio ---------- */
+let AC, mute = false;
+function ctx(){ if(!AC){ try{ AC = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} } if(AC && AC.state === 'suspended') AC.resume(); return AC; }
+function tone(f, t = 0, d = .15, type = 'triangle', v = .16){
+  if(mute) return; const a = ctx(); if(!a) return;
+  const o = a.createOscillator(), g = a.createGain(), s = a.currentTime + t;
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(0, s); g.gain.linearRampToValueAtTime(v, s + .01); g.gain.exponentialRampToValueAtTime(.001, s + d);
+  o.connect(g); g.connect(a.destination); o.start(s); o.stop(s + d + .05);
+}
+const seq = (n, st = .11, d = .18, ty) => n.forEach((f, i) => tone(f, i * st, d, ty));
+const sfx = {
+  join: () => seq([660, 880], .08), start: () => seq([392, 523, 659, 784], .12), tick: () => tone(900, 0, .05, 'square', .06),
+  tap: () => tone(520, 0, .08), ok: () => seq([523, 659, 784, 1047], .09), no: () => seq([300, 220], .14, .25, 'sawtooth'),
+  reveal: () => seq([440, 554], .1), fan: () => seq([523, 523, 523, 659, 784, 659, 784, 1047], .13, .25)
+};
+$('#bMute').onclick = () => { mute = !mute; $('#bMute').textContent = mute ? 'צליל: מושתק' : 'צליל: פעיל'; if(!mute) sfx.tap(); };
+
+/* ---------- confetti ---------- */
+const cv = $('#cf'), cx = cv.getContext('2d'); let parts = [], cfUntil = 0, cfOn = false;
+function sizeCv(){ cv.width = innerWidth; cv.height = innerHeight; } sizeCv(); addEventListener('resize', sizeCv);
+function confetti(ms = 5000){
+  cfUntil = Date.now() + ms; if(cfOn) return; cfOn = true;
+  const cols = ['#FF4F8B', '#FFC21A', '#6C3DF0', '#27B6A8', '#E21B3C', '#1368CE'];
+  (function loop(){
+    cx.clearRect(0, 0, cv.width, cv.height);
+    if(Date.now() < cfUntil) for(let i = 0; i < 4; i++) parts.push({x: Math.random() * cv.width, y: -20, vx: Math.random() * 4 - 2, vy: 2 + Math.random() * 4, r: Math.random() * 6, vr: Math.random() * .3 - .15, s: 6 + Math.random() * 8, c: cols[Math.random() * cols.length | 0]});
+    parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.r += p.vr; cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore(); });
+    parts = parts.filter(p => p.y < cv.height + 20);
+    if(parts.length || Date.now() < cfUntil) requestAnimationFrame(loop); else { cfOn = false; cx.clearRect(0, 0, cv.width, cv.height); }
+  })();
+}
+
+/* ---------- theme ---------- */
+let role = null;
+function setTheme(v, bc){
+  document.documentElement.dataset.theme = v;
+  $('#bTheme').textContent = v === 'party' ? 'מצב קלאסי' : 'ערכת יום הולדת';
+  if(bc && role === 'host') broadcast({t: 'theme', v});
+}
+$('#bTheme').onclick = () => { setTheme(document.documentElement.dataset.theme === 'party' ? 'classic' : 'party', true); sfx.tap(); };
+setTheme('party');
+
+/* ---------- landing ---------- */
+$('#goHost').onclick = () => { ctx(); hostStart(); };
+$('#goJoin').onclick = () => { ctx(); show('join'); };
+$('#inPin').oninput = e => e.target.value = e.target.value.replace(/\D/g, '');
+
+/* ============================ HOST ============================ */
+let peer, pin, players = {}, state = 'lobby', qi = -1, Q, qStart = 0, tInt, answers = {}, lastSec = 99;
+const broadcast = m => Object.values(players).forEach(p => { try{ p.conn.send(m); }catch(e){} });
+const active = () => Object.values(players).filter(p => !p.off);
+
+function hostStart(){
+  role = 'host'; $('#bTheme').style.display = '';
+  pin = String(1000 + Math.floor(Math.random() * 9000));
+  peer = new Peer(PFX + pin);
+  peer.on('open', () => {
+    show('h-lobby'); $('#pin').textContent = pin;
+    const url = location.origin + location.pathname + '?pin=' + pin;
+    $('#joinUrl').textContent = url.replace(/^https?:\/\//, '');
+    $('#qr').innerHTML = '';
+    try{ new QRCode($('#qr'), {text: url, width: 160, height: 160, colorDark: '#2A1442', colorLight: '#ffffff'}); }catch(e){}
+  });
+  peer.on('error', e => { if(e.type === 'unavailable-id'){ peer.destroy(); hostStart(); } else toast('שגיאת חיבור: ' + e.type); });
+  peer.on('connection', c => {
+    c.on('data', d => hmsg(c, d));
+    c.on('close', () => { const p = players[c.peer]; if(!p) return; if(state === 'lobby'){ delete players[c.peer]; renderLobby(); } else p.off = true; });
+  });
+}
+function renderLobby(){
+  const l = active();
+  $('#pc').textContent = l.length; $('#bStart').disabled = !l.length;
+  $('#plist').innerHTML = l.map(p => `<span class="chip">${esc(p.name)}</span>`).join('');
+}
+function hmsg(c, d){
+  const id = c.peer;
+  if(d.t === 'join'){
+    let name = String(d.name || '').trim().slice(0, 14) || 'שחקן', n = name, k = 2;
+    while(Object.values(players).some(p => p.name === n)) n = name + ' ' + k++;
+    players[id] = {name: n, score: 0, conn: c, last: 0};
+    c.send({t: 'joined', name: n, theme: document.documentElement.dataset.theme});
+    if(state !== 'lobby') c.send({t: 'wait'});
+    renderLobby(); sfx.join();
+  }
+  if(d.t === 'a' && state === 'q' && players[id] && !answers[id] && d.i >= 0 && d.i < 4){
+    answers[id] = {i: d.i, ms: Date.now() - qStart};
+    players[id].conn.send({t: 'locked'});
+    const n = Object.keys(answers).length; $('#ansCount').textContent = `${n} מתוך ${active().length} ענו`;
+    if(n >= active().length) endQ();
+  }
+}
+$('#bStart').onclick = () => { sfx.start(); qi = -1; Object.values(players).forEach(p => p.score = 0); nextQ(); };
+function nextQ(){
+  qi++; if(qi >= QUESTIONS.length) return endGame();
+  Q = QUESTIONS[qi]; Q.time = Q.time || 20; answers = {}; state = 'q'; qStart = Date.now(); lastSec = 99;
+  $('#qn').textContent = `שאלה ${qi + 1} מתוך ${QUESTIONS.length}`;
+  $('#qtext').textContent = Q.q;
+  $('#hans').innerHTML = Q.a.map((a, i) => `<div class="tile t${i}">${SH[i]}<span>${esc(a)}</span></div>`).join('');
+  $('#ansCount').textContent = `0 מתוך ${active().length} ענו`;
+  show('h-q');
+  broadcast({t: 'q', idx: qi, total: QUESTIONS.length, a: Q.a, time: Q.time});
+  clearInterval(tInt);
+  tInt = setInterval(() => {
+    const left = Q.time - (Date.now() - qStart) / 1000;
+    $('#tfill').style.width = Math.max(0, left / Q.time * 100) + '%';
+    const s = Math.max(0, Math.ceil(left)); $('#tnum').textContent = s;
+    if(s <= 5 && s !== lastSec && s > 0) sfx.tick(); lastSec = s;
+    if(left <= 0) endQ();
+  }, 100);
+}
+$('#bSkip').onclick = () => endQ();
+function ranked(){ return Object.entries(players).sort((a, b) => b[1].score - a[1].score); }
+function endQ(){
+  if(state !== 'q') return; state = 'reveal'; clearInterval(tInt);
+  const counts = [0, 0, 0, 0];
+  Object.entries(players).forEach(([id, p]) => {
+    const a = answers[id]; let pts = 0, ok = false;
+    if(a){ counts[a.i]++; ok = a.i === Q.correct; if(ok) pts = Math.round(1000 * (1 - .5 * Math.min(1, a.ms / (Q.time * 1000)))); }
+    p.score += pts; p.last = pts; p.ok = ok;
+  });
+  const r = ranked();
+  r.forEach(([id, p], i) => { try{ p.conn.send({t: 'res', ok: p.ok, pts: p.last, score: p.score, rank: i + 1, n: r.length, answered: !!answers[id]}); }catch(e){} });
+  $('#rqn').textContent = `שאלה ${qi + 1} מתוך ${QUESTIONS.length}`; $('#rq').textContent = Q.q;
+  const mx = Math.max(1, ...counts);
+  $('#chart').innerHTML = counts.map((c, i) => `<div class="col ${i === Q.correct ? '' : 'no'}"><div class="ok">${i === Q.correct ? '✓ נכון' : ''}</div><div class="bar" data-h="${c / mx * 100}" style="background:${COL[i]}">${c}</div><div class="ic" style="background:${COL[i]};${i === 2 ? 'color:#2A1A00' : ''}">${SH[i]}</div></div>`).join('');
+  $('#rightAns').textContent = 'התשובה הנכונה: ' + Q.a[Q.correct];
+  $('#bBoard').textContent = 'לוח התוצאות';
+  show('h-rev'); sfx.reveal();
+  requestAnimationFrame(() => setTimeout(() => $$('.bar').forEach(b => b.style.height = b.dataset.h + '%'), 60));
+}
+$('#bBoard').onclick = () => {
+  state = 'board'; const r = ranked().slice(0, 5), top = Math.max(1, r[0] ? r[0][1].score : 1);
+  $('#rows').innerHTML = r.map(([, p], i) => `<div class="row" style="animation-delay:${i * .08}s"><i data-w="${p.score / top * 100}"></i><span><b class="rk">${i + 1}</b>${esc(p.name)}</span><span>${p.score}<small>${p.last ? '+' + p.last : ''}</small></span></div>`).join('');
+  $('#bNext').textContent = qi + 1 >= QUESTIONS.length ? 'לפודיום!' : 'השאלה הבאה';
+  show('h-board'); sfx.tap();
+  setTimeout(() => $$('.row i').forEach(i => i.style.width = i.dataset.w + '%'), 80);
+};
+$('#bNext').onclick = nextQ;
+function endGame(){
+  state = 'end'; const r = ranked();
+  r.forEach(([, p], i) => { try{ p.conn.send({t: 'end', rank: i + 1, score: p.score, n: r.length}); }catch(e){} });
+  const order = [1, 0, 2], hs = [62, 88, 44];
+  $('#podium').innerHTML = order.map((k, pos) => r[k] ? `<div class="pod p${k + 1}"><b>${esc(r[k][1].name)}<br><small style="font-weight:600">${r[k][1].score}</small></b><div class="blk" style="height:${hs[pos]}%">${k + 1}</div></div>` : '').join('');
+  show('h-end'); sfx.fan(); confetti(9000);
+}
+
+/* ========================== PLAYER ========================== */
+let conn, myName = '', pTimer, pStart = 0, pTime = 20, answered = false;
+$('#bJoin').onclick = () => {
+  const p = $('#inPin').value.trim(), n = $('#inName').value.trim();
+  if(p.length !== 4) return toast('הקוד הוא 4 ספרות'); if(!n) return toast('איך קוראים לך?');
+  ctx(); role = 'player'; $('#bJoin').disabled = true; $('#bJoin').textContent = 'מתחברים...';
+  const fail = m => { toast(m); $('#bJoin').disabled = false; $('#bJoin').textContent = 'יאללה, נכנסים'; try{ peer.destroy(); }catch(e){} };
+  peer = new Peer();
+  const to = setTimeout(() => fail('לא מצאנו את החדר, בדקו את הקוד'), 9000);
+  peer.on('error', e => { clearTimeout(to); fail(e.type === 'peer-unavailable' ? 'אין חדר עם הקוד הזה' : 'שגיאת חיבור'); });
+  peer.on('open', () => {
+    conn = peer.connect(PFX + p, {reliable: true});
+    conn.on('open', () => { clearTimeout(to); conn.send({t: 'join', name: n}); });
+    conn.on('data', pmsg);
+    conn.on('close', () => { toast('החיבור לחדר נסגר'); setTimeout(() => location.href = location.pathname, 1800); });
+  });
+};
+function pmsg(d){
+  if(d.t === 'theme') setTheme(d.v);
+  if(d.t === 'joined'){ setTheme(d.theme); myName = d.name; $('#pName').textContent = d.name; show('p-wait'); sfx.join(); }
+  if(d.t === 'wait'){ $('#pMsg').textContent = 'משחק כבר רץ, תצטרפו בשאלה הבאה'; }
+  if(d.t === 'q'){
+    answered = false; pTime = d.time; pStart = Date.now(); $('#pq').textContent = `שאלה ${d.idx + 1} מתוך ${d.total}`;
+    $('#pgrid').innerHTML = d.a.map((a, i) => `<button class="tile t${i}" data-i="${i}">${SH[i]}<span>${esc(a)}</span></button>`).join('');
+    $$('#pgrid .tile').forEach(b => b.onclick = () => { if(answered) return; answered = true; sfx.tap(); conn.send({t: 'a', i: +b.dataset.i}); show('p-lock'); });
+    show('p-ans'); sfx.start(); clearInterval(pTimer);
+    pTimer = setInterval(() => { $('#ptf').style.width = Math.max(0, 100 - (Date.now() - pStart) / pTime / 10) + '%'; }, 100);
+  }
+  if(d.t === 'res'){
+    clearInterval(pTimer); const c = $('#pr');
+    c.className = 'card center ' + (d.ok ? 'res-ok' : 'res-no');
+    $('#prT').textContent = d.ok ? 'נכון!' : (d.answered ? 'לא נכון' : 'נגמר הזמן');
+    $('#prP').textContent = d.ok ? '+' + d.pts + ' נקודות' : '+0';
+    $('#prS').textContent = `מקום ${d.rank} מתוך ${d.n} · ${d.score} נקודות`;
+    show('p-res'); d.ok ? sfx.ok() : sfx.no();
+  }
+  if(d.t === 'end'){
+    clearInterval(pTimer); $('#peR').textContent = d.rank <= 3 ? ['🥇 מקום 1!', '🥈 מקום 2!', '🥉 מקום 3!'][d.rank - 1] : 'מקום ' + d.rank;
+    $('#peS').textContent = d.score + ' נקודות'; show('p-end'); sfx.fan(); if(d.rank <= 3) confetti(7000);
+  }
+}
+
+/* ---------- boot ---------- */
+const urlPin = new URLSearchParams(location.search).get('pin');
+if(urlPin){ $('#inPin').value = urlPin.replace(/\D/g, '').slice(0, 4); show('join'); } else show('landing');
+</script>
+</body>
+</html>
