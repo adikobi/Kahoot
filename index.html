@@ -53,6 +53,9 @@ input:focus{border-color:var(--accent)}
 .kicker{font-weight:800;color:var(--mute);letter-spacing:.02em}
 .center{align-items:center;justify-content:center;text-align:center}
 
+input[type=radio]{width:26px;height:26px;padding:0;box-shadow:none;accent-color:var(--accent);flex:none}
+.card input:not([type=radio]){border:2px solid #E7DDF2;box-shadow:none;font-size:1.05rem;text-align:start;padding:12px 14px}
+.erow{display:flex;gap:10px;align-items:center}
 /* landing */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;flex:1}
 .hero h1{font-size:clamp(3rem,8.5vw,7rem);line-height:.95;letter-spacing:-.045em;font-weight:900;margin:14px 0 18px}
@@ -168,10 +171,27 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
       <div class="cta">
         <button class="btn" id="goHost">אירוח משחק</button>
         <button class="btn alt" id="goJoin">הצטרפות למשחק</button>
+        <button class="btn alt" id="goEdit" style="font-size:1rem;padding:12px 22px">עריכת שאלות</button>
       </div>
     </div>
     <div class="ten" aria-hidden="true">10</div>
   </div>
+</section>
+
+<!-- EDITOR -->
+<section class="screen" id="editor">
+  <h2>עריכת שאלות</h2>
+  <div class="card" style="margin:14px 0;display:flex;flex-direction:column;gap:10px">
+    <input id="eq" placeholder="השאלה">
+    <div class="erow"><input type="radio" name="ec" value="0"><input class="ea" placeholder="תשובה 1 (משולש אדום)"></div>
+    <div class="erow"><input type="radio" name="ec" value="1"><input class="ea" placeholder="תשובה 2 (מעוין כחול)"></div>
+    <div class="erow"><input type="radio" name="ec" value="2"><input class="ea" placeholder="תשובה 3 (עיגול צהוב)"></div>
+    <div class="erow"><input type="radio" name="ec" value="3"><input class="ea" placeholder="תשובה 4 (ריבוע ירוק)"></div>
+    <div class="erow"><span class="kicker">שניות:</span><input id="et" type="number" value="20" min="5" max="90" style="width:100px"><span class="kicker">סמנו את התשובה הנכונה</span></div>
+    <div class="erow"><button class="btn" id="eSave" style="font-size:1.05rem;padding:12px 26px">הוספת שאלה</button><button class="btn alt" id="eCancel" style="display:none;font-size:1rem;padding:12px 22px">ביטול עריכה</button></div>
+  </div>
+  <div class="rows" id="elist"></div>
+  <div class="cta" style="margin-top:0"><button class="btn" id="eBack">סיום וחזרה</button><button class="btn alt" id="eReset" style="font-size:1rem;padding:12px 22px">איפוס לשאלות המקור</button></div>
 </section>
 
 <!-- HOST LOBBY -->
@@ -271,15 +291,31 @@ h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:900}
    a:       exactly 4 answers  (order = red triangle, blue diamond, yellow circle, green square)
    correct: index of the right answer (0 = first, 1 = second, 2 = third, 3 = fourth)
    time:    seconds to answer (optional, default 20)
-   Add or remove objects freely. Tip: add personal ones, e.g. the name of Maayan's pet!
+   Add or remove objects freely.
    ============================================================ */
-const QUESTIONS = [
-  { q: "מהי החיה הגבוהה ביותר בעולם?",           a: ["פיל", "ג׳ירפה", "גמל", "סוס"],                 correct: 1, time: 15 },
-  { q: "מה מדליקים על עוגת יום הולדת?",          a: ["נרות", "פנסים", "זיקוקים", "גפרורים"],         correct: 0, time: 15 },
-  { q: "באיזו עיר נמצא מגדל אייפל?",              a: ["רומא", "לונדון", "מדריד", "פריז"],              correct: 3, time: 20 },
-  { q: "כמה זה 7 × 8 ?",                          a: ["54", "56", "58", "64"],                         correct: 1, time: 20 },
-  { q: "איזה כוכב לכת נקרא ״הכוכב האדום״?",       a: ["נוגה", "צדק", "שבתאי", "מאדים"],                correct: 3, time: 20 }
+const DEFAULT_QUESTIONS = [
+  { q: "באיזה תאריך היא נולדה?", a: ["15.11.2016", "7.12.2016", "22.12.2016", "1.1.2017"], correct: 1, time: 20 },
+  { q: "באיזו שעה היא נולדה?", a: ["18:30", "20:15", "22:40 (בערך)", "00:30"], correct: 2, time: 20 },
+  { q: "באיזה בית חולים היא נולדה?", a: ["הדסה עין כרם", "שערי צדק", "הדסה הר הצופים", "מעייני הישועה"], correct: 1, time: 20 },
+  { q: "כמה היא שקלה בלידה?", a: ["2.850 ק״ג", "3.260 ק״ג", "3.650 ק״ג", "3.950 ק״ג"], correct: 1, time: 20 },
+  { q: "באיזה שבוע של ההיריון היא נולדה?", a: ["שבוע 35+2", "שבוע 36+5", "שבוע 37+4 בערך", "שבוע 39+1"], correct: 2, time: 20 },
+  { q: "איזה שם סבא בני הציע לה?", a: ["נעימה", "רחל", "יהודית", "אביגיל"], correct: 0, time: 20 },
+  { q: "באיזה גן היא הייתה לפני שעלתה לכיתה א׳?", a: ["גן שקד", "גן הרדוף", "גן תמר", "גן רימון"], correct: 2, time: 20 },
+  { q: "איך קראו לגננת הראשונה שלה?", a: ["דינה", "חגית", "עדינה", "מיכל"], correct: 2, time: 20 },
+  { q: "באיזו שנה היא התחילה ללמוד בבית הספר?", a: ["2021", "תשפ״ג", "2023", "תשפ״א"], correct: 1, time: 20 },
+  { q: "מה היה החוג הראשון שאליו היא נרשמה?", a: ["טרמפולינות", "שחייה", "ריקוד", "רובוטיקה"], correct: 2, time: 20 },
+  { q: "למה היא התחפשה בפורים כשהייתה בת 6?", a: ["נסיכה", "סינדרלה", "חד קרן", "פיה"], correct: 1, time: 20 },
+  { q: "באיזה גיל היא התחילה לישון לילה שלם?", a: ["בגיל חודשיים", "בגיל חצי שנה", "בגיל שנה", "שאלה שאמא מעדיפה לא להיזכר בה 😅"], correct: 3, time: 20 },
+  { q: "למה היא התחפשה בפורים בשנה שעברה?", a: ["מעיין גנים – באר מים חיים", "אסתר המלכה", "מלכת השלג", "פיית הפרחים"], correct: 0, time: 20 },
+  { q: "כמה בני דודים יש לה?", a: ["12", "14", "16", "18"], correct: 2, time: 20 },
+  { q: "איך קראו למטפלת הראשונה שלה?", a: ["עדינה", "חגית", "דינה", "מרים"], correct: 2, time: 20 }
 ];
+/* Questions added/edited through the in-app editor (landing page) are stored in this browser
+   and override the list above. Use "איפוס" in the editor to go back to this list. */
+let QUESTIONS = null;
+try{ QUESTIONS = JSON.parse(localStorage.getItem('mq10') || 'null'); }catch(e){}
+if(!Array.isArray(QUESTIONS) || !QUESTIONS.length) QUESTIONS = DEFAULT_QUESTIONS.map(x => ({...x}));
+const saveQ = () => { try{ localStorage.setItem('mq10', JSON.stringify(QUESTIONS)); }catch(e){} };
 /* ============================================================ */
 
 const PFX = 'maayan10-';
@@ -344,6 +380,31 @@ setTheme('party');
 $('#goHost').onclick = () => { ctx(); hostStart(); };
 $('#goJoin').onclick = () => { ctx(); show('join'); };
 $('#inPin').oninput = e => e.target.value = e.target.value.replace(/\D/g, '');
+
+/* ---------- editor ---------- */
+let eIdx = -1;
+function renderEditor(){
+  $('#elist').innerHTML = QUESTIONS.map((q, i) => `<div class="row" style="font-size:1rem"><span>${i + 1}. ${esc(q.q)}</span><span style="display:flex;gap:6px"><button class="pill" data-e="${i}">עריכה</button><button class="pill" data-d="${i}">מחיקה</button></span></div>`).join('');
+  $$('#elist [data-e]').forEach(b => b.onclick = () => {
+    eIdx = +b.dataset.e; const q = QUESTIONS[eIdx];
+    $('#eq').value = q.q; $$('.ea').forEach((x, i) => x.value = q.a[i]); $$('[name=ec]')[q.correct].checked = true; $('#et').value = q.time || 20;
+    $('#eSave').textContent = 'שמירת שינויים'; $('#eCancel').style.display = ''; scrollTo(0, 0);
+  });
+  $$('#elist [data-d]').forEach(b => b.onclick = () => { if(QUESTIONS.length < 2) return toast('חייבת להישאר שאלה אחת'); QUESTIONS.splice(+b.dataset.d, 1); saveQ(); clearForm(); renderEditor(); });
+}
+function clearForm(){ eIdx = -1; $('#eq').value = ''; $$('.ea').forEach(x => x.value = ''); $$('[name=ec]').forEach(r => r.checked = false); $('#et').value = 20; $('#eSave').textContent = 'הוספת שאלה'; $('#eCancel').style.display = 'none'; }
+$('#goEdit').onclick = () => { clearForm(); renderEditor(); show('editor'); };
+$('#eCancel').onclick = clearForm;
+$('#eBack').onclick = () => show('landing');
+$('#eReset').onclick = () => { if(!confirm('לחזור לשאלות המקור?')) return; try{ localStorage.removeItem('mq10'); }catch(e){} QUESTIONS = DEFAULT_QUESTIONS.map(x => ({...x})); clearForm(); renderEditor(); };
+$('#eSave').onclick = () => {
+  const q = $('#eq').value.trim(), a = $$('.ea').map(x => x.value.trim()), c = $$('[name=ec]').findIndex(r => r.checked);
+  if(!q || a.some(x => !x)) return toast('צריך למלא שאלה וארבע תשובות');
+  if(c < 0) return toast('סמנו את התשובה הנכונה');
+  const o = {q, a, correct: c, time: Math.min(90, Math.max(5, +$('#et').value || 20))};
+  if(eIdx >= 0) QUESTIONS[eIdx] = o; else QUESTIONS.push(o);
+  saveQ(); clearForm(); renderEditor(); toast('נשמר');
+};
 
 /* ============================ HOST ============================ */
 let peer, pin, players = {}, state = 'lobby', qi = -1, Q, qStart = 0, tInt, answers = {}, lastSec = 99;
